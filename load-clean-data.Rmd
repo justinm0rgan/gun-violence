@@ -1,0 +1,60 @@
+---
+title: "Gun Violence - Load & Clean data"
+author: "Justin Williams"
+date: '2022-06-12'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-packages}
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(flipTime)
+library(sf)
+library(mapview)
+```
+
+
+## Load data
+
+```{r load-data}
+all_gun_violence <- read.csv("./data/export-ee043e5f-d7d6-4847-9aa3-7a86fcec4f5a.csv")
+
+# clean column titles
+all_gun_violence <-  all_gun_violence %>% 
+  clean_names()
+
+head(all_gun_violence)
+```
+
+Load shapefile of US counties obtained from
+[data.gov](https://catalog.data.gov/dataset/tiger-line-shapefile-2016-nation-u-s-current-county-and-equivalent-national-shapefile).
+
+```{r load-shapefile}
+unzip("./data/shp/tl_2016_us_county.zip",
+      exdir = "./data/shp/")
+
+us_counties <- st_read("./data/shp/tl_2016_us_county.shp")
+```
+
+
+## Clean data
+
+- convert `Incident Date` column to datetime
+- create separate year/month/day columns
+- get FIPS code for state and county
+- obtain US County shapefile
+- could also reverse geocode from address to get specific lat/lon, not sure that is necessary"
+
+```{r date-column}
+all_gun_violence <- all_gun_violence %>% 
+  mutate(incident_date = AsDate(incident_date),
+         year = year(incident_date),
+         month = month(incident_date),
+         day = day(incident_date))
+```
+
