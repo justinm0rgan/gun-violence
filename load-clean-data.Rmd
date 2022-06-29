@@ -15,8 +15,11 @@ if(!require(janitor)) install.packages("janitor", repos = "http://cran.us.r-proj
 if(!require(lubridate)) install.packages("lubridate", repos = "http://cran.us.r-project.org")
 if(!require(remotes)) install.packages("remotes", repos = "http://cran.us.r-project.org")
 remotes::install_github("Displayr/flipTime")
+if(!require(dotenv)) install.packages("dotenv")
+if(!require(tidycensus)) install.packages("tidycensus", repos = "http://cran.us.r-project.org")
 if(!require(sf)) install.packages("sf", repos = "http://cran.us.r-project.org")
 if(!require(mapview)) install.packages("mapview", repos = "http://cran.us.r-project.org")
+if(!require(ggmap)) install.packages("ggmap", repos = "http://cran.us.r-project.org")
 ```
 
 
@@ -35,6 +38,8 @@ head(all_gun_violence)
 Load shapefile of US counties obtained from
 [data.gov](https://catalog.data.gov/dataset/tiger-line-shapefile-2016-nation-u-s-current-county-and-equivalent-national-shapefile).
 
+Can do this programmatically with **tidycensus** package and also grab some demographic statistics. But for now use this. 
+
 ```{r load-shapefile}
 unzip("./data/shp/tl_2016_us_county.zip",
       exdir = "./data/shp/")
@@ -49,6 +54,12 @@ unzip("./data/shp/tl_2016_us_county.zip",
 - get FIPS code for state and county
 - obtain US County shapefile
 - could also reverse geocode from address to get specific lat/lon, not sure that is necessary"
+- actually will need to geocode from addresses:
+  - first have to obtain list of state abbreviations to look up
+  - second concatenate address, city/county, state.
+  - then use **ggmap** to look up lat/lon
+  - utilize script that stops at 2500, then restarts day later
+  
 
 ```{r date-column}
 (all_gun_violence <- all_gun_violence %>% 
