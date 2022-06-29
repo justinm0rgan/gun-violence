@@ -10,12 +10,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r load-packages}
-library(tidyverse)
-library(janitor)
-library(lubridate)
-library(flipTime)
-library(sf)
-library(mapview)
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org" )
+if(!require(janitor)) install.packages("janitor", repos = "http://cran.us.r-project.org")
+if(!require(lubridate)) install.packages("lubridate", repos = "http://cran.us.r-project.org")
+if(!require(remotes)) install.packages("remotes", repos = "http://cran.us.r-project.org")
+remotes::install_github("Displayr/flipTime")
+if(!require(sf)) install.packages("sf", repos = "http://cran.us.r-project.org")
+if(!require(mapview)) install.packages("mapview", repos = "http://cran.us.r-project.org")
 ```
 
 
@@ -38,9 +39,8 @@ Load shapefile of US counties obtained from
 unzip("./data/shp/tl_2016_us_county.zip",
       exdir = "./data/shp/")
 
-us_counties <- st_read("./data/shp/tl_2016_us_county.shp")
+(us_counties <- st_read("./data/shp/tl_2016_us_county.shp"))
 ```
-
 
 ## Clean data
 
@@ -51,10 +51,10 @@ us_counties <- st_read("./data/shp/tl_2016_us_county.shp")
 - could also reverse geocode from address to get specific lat/lon, not sure that is necessary"
 
 ```{r date-column}
-all_gun_violence <- all_gun_violence %>% 
-  mutate(incident_date = AsDate(incident_date),
+(all_gun_violence <- all_gun_violence %>% 
+  mutate(incident_date =flipTime::AsDate(incident_date),
          year = year(incident_date),
          month = month(incident_date),
-         day = day(incident_date))
+         day = day(incident_date)))
 ```
 
