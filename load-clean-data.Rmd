@@ -33,6 +33,8 @@ all_gun_violence <-  all_gun_violence %>%
   clean_names()
 
 head(all_gun_violence)
+
+View(all_gun_violence)
 ```
 
 Load shapefile of US counties obtained from
@@ -55,11 +57,21 @@ unzip("./data/shp/tl_2016_us_county.zip",
 - obtain US County shapefile
 - could also reverse geocode from address to get specific lat/lon, not sure that is necessary"
 - actually will need to geocode from addresses:
-  - first have to obtain list of state abbreviations to look up
+  - first have to obtain list of state abbreviations to look up downloaded from:
+  [US State Abbreviations](https://worldpopulationreview.com/states/state-abbreviations) 
   - second concatenate address, city/county, state.
   - then use **ggmap** to look up lat/lon
   - utilize script that stops at 2500, then restarts day later
   
+### Convert date, year month
+
+Convert incident date to datetime and separate columns for:
+
+  - year
+  - month
+  - day
+  
+This will enable more specific data analysis based on date.
 
 ```{r date-column}
 (all_gun_violence <- all_gun_violence %>% 
@@ -68,4 +80,26 @@ unzip("./data/shp/tl_2016_us_county.zip",
          month = month(incident_date),
          day = day(incident_date)))
 ```
+  
+### State abbreviations
+
+Load state abbreviations
+
+```{r state-abbrev}
+us_state_abbr <- read_csv("./data/abbr-name-list.csv",
+                          show_col_types = F)
+```
+
+
+### Join
+
+Join `us_state_abbr` to `all_gun_violence` df.
+
+```{r}
+
+```
+
+  
+
+
 
