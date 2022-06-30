@@ -41,3 +41,6 @@ vignettes/*.pdf
 
 # jupyter nb
 .ipynb_checkpoints
+
+# git
+.gitattributes
