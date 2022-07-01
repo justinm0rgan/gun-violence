@@ -20,6 +20,7 @@ if(!require(tidycensus)) install.packages("tidycensus", repos = "http://cran.us.
 if(!require(sf)) install.packages("sf", repos = "http://cran.us.r-project.org")
 if(!require(mapview)) install.packages("mapview", repos = "http://cran.us.r-project.org")
 if(!require(ggmap)) install.packages("ggmap", repos = "http://cran.us.r-project.org")
+if(!require(tmaptools)) install.packages("tmaptools", repos = "http://cran.us.r-project.org")
 ```
 
 
@@ -86,8 +87,8 @@ This will enable more specific data analysis based on date.
 Load state abbreviations
 
 ```{r state-abbrev}
-us_state_abbr <- read_csv("./data/abbr-name-list.csv",
-                          show_col_types = F)
+(us_state_abbr <- read_csv("./data/abbr-name-list.csv",
+                          show_col_types = F))
 ```
 
 
@@ -96,10 +97,41 @@ us_state_abbr <- read_csv("./data/abbr-name-list.csv",
 Join `us_state_abbr` to `all_gun_violence` df.
 
 ```{r}
-
+all_gun_violence_abbr <- all_gun_violence %>% 
+  left_join(us_state_abbr,
+            by = c("state" = "name"))
 ```
 
   
+### Create address column suitable for geocoding
 
+```{r concatenate-address-column}
+all_gun_violence_full <- all_gun_violence_abbr %>% 
+  mutate(
+    address = str_remove(address, " block of"),
+    address = str_remove(address, "Block of"),
+    address = gsub(".*(and{1})","",address),
+    address_full = paste(address, city_or_county, abbreviation,
+                              sep = ", "))
+all_gun_violence_full <- all_gun_violence_abbr %>% 
+  mutate(
+    county_state = paste(city_or_county, state,
+                         sep = ", ")
+  )
 
+all_gun_violence_full
+```
+
+## Geocode addresses
+
+Using **tmaptools** which relies on the Nominatim API pulling from OSM.
+
+```{r geocoding-tmaptools}
+test_addresses <- all_gun_violence_full$county_state[1:20]
+geocode_OSM(test_addresses,
+            keep.unfound = T,
+            details = T,
+            as.sf = T,
+            geometry = "point")
+```
 
