@@ -19,10 +19,9 @@ if(!require(dotenv)) install.packages("dotenv")
 if(!require(tidycensus)) install.packages("tidycensus", repos = "http://cran.us.r-project.org")
 if(!require(sf)) install.packages("sf", repos = "http://cran.us.r-project.org")
 if(!require(mapview)) install.packages("mapview", repos = "http://cran.us.r-project.org")
-if(!require(ggmap)) install.packages("ggmap", repos = "http://cran.us.r-project.org")
+if(!require(leaflet)) install.packages("leaflet", repos = "http://cran.us.r-project.org")
 if(!require(tmaptools)) install.packages("tmaptools", repos = "http://cran.us.r-project.org")
 ```
-
 
 ## Load data
 
@@ -113,7 +112,8 @@ all_gun_violence_abbr <- all_gun_violence %>%
     address_edit = gsub(".*(\\sand{1}\\s)","",address_edit),
     address_full = paste(address_edit, city_or_county, abbreviation,
                               sep = ", "),
-    count_state = paste(city_or_county, state, sep = ", ")))
+    county_state = paste(city_or_county, state, sep = ", "),
+    address_state = paste(address_edit, abbreviation, sep = ", ")))
 ```
 
 ## Geocode addresses
@@ -121,11 +121,32 @@ all_gun_violence_abbr <- all_gun_violence %>%
 Using **tmaptools** which relies on the Nominatim API pulling from OSM.
 
 ```{r geocoding-tmaptools}
-test_addresses <- all_gun_violence_full$county_state[1:20]
-geocode_OSM(test_addresses,
+test_addresses <- all_gun_violence_full$address_state[1:20]
+test_sf <- geocode_OSM(test_addresses,
             keep.unfound = T,
             details = T,
             as.sf = T,
             geometry = "point")
+
+view(test_sf)
 ```
 
+
+Graph this to ensure geocoding worked correctly.
+
+```{r test-graph}
+mapview(test_sf)
+```
+
+Seems like its best to cleaned address, then state WITHOUT utilizing the `city_or_county` column. OSM is able to identify the city/county just from address and state. I assume there could be some errors here and there with this method, if the same address is in the same state in multiple places. The other option would be to utilize the full address, then for those that come up NA, simply utilize `county_state` feature column. 
+
+Will US map with county borders, be too granular for this large of an area on the app?
+
+```{r test-us-counties}
+us_counties %>% 
+  leaflet() %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addPolygons()
+```
+
+Only keep the continuous 50 states and transform sf object to `+proj=longlat +datum=WGS84`
