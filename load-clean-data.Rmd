@@ -10,7 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r load-packages}
-if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org" )
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if(!require(tidycensus)) install.packages("tidycensus", repos = 
+"http://cran.us.r-project.org")
 if(!require(janitor)) install.packages("janitor", repos = "http://cran.us.r-project.org")
 if(!require(lubridate)) install.packages("lubridate", repos = "http://cran.us.r-project.org")
 if(!require(remotes)) install.packages("remotes", repos = "http://cran.us.r-project.org")
@@ -36,7 +38,24 @@ head(all_gun_violence)
 
 View(all_gun_violence)
 ```
+### Census data and US states shapefile
 
+Get census data with tidycensus package to get ratio of population to gun violence for aggregation by state map.
+
+```{r census-data}
+# load variables for decennial 
+dec_var <- tidycensus::load_variables(2020,"pl",cache = T)
+
+# download population and state geometry
+df_state_pop <- tidycensus::get_decennial(geography = "state",
+                          year = 2020,
+                          geometry = TRUE,
+                          key = Sys.getenv("CENSUS_API"),
+                          variables = "P1_001N")
+```
+
+
+### US Counties
 Load shapefile of US counties obtained from
 [data.gov](https://catalog.data.gov/dataset/tiger-line-shapefile-2016-nation-u-s-current-county-and-equivalent-national-shapefile).
 
@@ -47,6 +66,31 @@ unzip("./data/shp/tl_2016_us_county.zip",
       exdir = "./data/shp/")
 
 (us_counties <- st_read("./data/shp/tl_2016_us_county.shp"))
+```
+
+### US States
+
+```{r load-states-shapefile}
+# url
+url_state <- "https://www2.census.gov/geo/tiger/TIGER2017//STATE/tl_2017_us_state.zip"
+
+# create temp dir
+td = tempdir()
+# create placeholder file
+tf = tempfile(tmpdir = td, fileext = ".zip")
+# downlaod into the placeholder file
+download.file(url_state, tf)
+# get the name of the shp file in the zip archive
+fname = unzip(tf, list = TRUE)$Name[4]
+# unzip file to the temp dir
+unzip(tf, files = fname, exdir = td, overwrite = TRUE)
+# fpath is the full path to the extracted file
+fpath = file.path(td, fname)
+
+(us_states <- st_read(fpath, drivers = "shp"))
+```
+```{r upload-from-data-folder}
+(us_states <- st_read("./data/shp/tl_2017_us_state/tl_2017_us_state.shp"))
 ```
 
 ## Clean data
@@ -89,7 +133,6 @@ Load state abbreviations
 (us_state_abbr <- read_csv("./data/abbr-name-list.csv",
                           show_col_types = F))
 ```
-
 
 ### Join
 
@@ -150,3 +193,21 @@ us_counties %>%
 ```
 
 Only keep the continuous 50 states and transform sf object to `+proj=longlat +datum=WGS84`
+
+## Plot by lat/lon
+
+Plot each record within date span for US.
+
+```{r plot-lat-lon-within-date}
+all_addresses <- all_gun_violence_full$address_state
+full_sf <- geocode_OSM(all_addresses,
+            keep.unfound = T,
+            details = T,
+            as.sf = T,
+            geometry = "point")
+
+view(full_sf)
+```
+
+## Aggregate by county
+
