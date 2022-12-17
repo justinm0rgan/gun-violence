@@ -41,6 +41,8 @@ vignettes/*.pdf
 
 # jupyter nb
 .ipynb_checkpoints
+.DS_Store
+./data/DS_Store
 
 # git
 .gitattributes
