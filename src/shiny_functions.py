@@ -74,6 +74,8 @@ def int_choro_ipyleaflet(geojson_gdf, gdf, value, title, metric, rgb_list,
                    zoom=4,
                    scroll_wheel_zoom=True,
                    dragging=True)
+    # add scale              
+    basemap.add_control(ipyleaflet.leaflet.ScaleControl(position="bottomleft"))
 
     # choropleth object
     choro_layer = ipyleaflet.Choropleth(
@@ -134,5 +136,5 @@ def int_choro_ipyleaflet(geojson_gdf, gdf, value, title, metric, rgb_list,
     # display map and label
     return ipywidgets.VBox([basemap, label])
 
-    if __name__ == "__main__":
-        None
+if __name__ == "__main__":
+    None
