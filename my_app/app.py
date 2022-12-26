@@ -1,23 +1,19 @@
 # import packages
 import pandas as pd
 import geopandas as gpd
-from shiny import App, reactive, render, ui
-from shinywidgets import output_widget, reactive_read, register_widget, render_widget
+from shiny import App, reactive, ui
+from shinywidgets import output_widget, render_widget
 import json
 from branca.colormap import linear
-import ipyleaflet
-import ipywidgets
 
 # import functions
-import sys
-sys.path.append('/Users/justinwilliams/projects/gun-violence/src')
 import shiny_functions as sf
 
 # import data
-df = pd.read_pickle('../data/pickle/df_yr_mon_state')
-us_shp = gpd.GeoDataFrame(pd.read_pickle('../data/pickle/us_shp'))
-df_gun_laws = pd.read_pickle('../data/pickle/df_gun_laws')
-df_census = pd.read_pickle('../data/pickle/df_us_census')
+df = pd.read_pickle('data//df_yr_mon_state')
+us_shp = gpd.GeoDataFrame(pd.read_pickle('data/us_shp'))
+df_gun_laws = pd.read_pickle('data/df_gun_laws')
+df_census = pd.read_pickle('data/df_us_census')
 
 # set variables
 # start and end date

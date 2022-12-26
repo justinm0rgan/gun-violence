@@ -1,0 +1,11 @@
+{
+    "https://api.shinyapps.io": {
+        "server_url": "https://api.shinyapps.io",
+        "filename": "/Users/justinwilliams/projects/gun-violence/my_app",
+        "app_url": "https://justinm0rgan.shinyapps.io/gun-violence-mass-shooting-us/",
+        "app_id": 7942848,
+        "app_guid": null,
+        "title": "gun-violence-mass-shooting-us",
+        "app_mode": "python-shiny"
+    }
+}
