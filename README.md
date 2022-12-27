@@ -20,9 +20,9 @@ States with no mass shooting incidents were:
 - North Dakota
 - Wyoming
 
-When controlling per 1,000 population, Washington DC became an extreme outlier, with only ~700,000 living within city limits and greater than 4 mass shooting incidents per 1,000 people. The average injured per 1,000 people per incident, was more then 4 times kiled per 1,000 people. The most frequent day and month for mass shootings events were Sunday and August. Overall, weekends were also more violent per mass shooting event the weekdays on average by .5 injured and killed per incident and the summer season had the most mass shooting events. All this said, increased quantity of Gun laws did not express any significant corelation with a reduction in mass shootings
+When controlling per 1,000 population, Washington DC with only ~700,000 living within city limits and greater than 4 mass shooting incidents per 1,000 people, became an extreme outlier. The average injured per 1,000 people per incident, was more then 4 times killed per 1,000 people. The most frequent day and month for mass shootings events were Sunday and August. Overall, on average weekends were more violent per mass shooting event then the weekdays by .5 injured and killed per incident, while the summer season had the most mass shooting events. All this said, increased quantity of Gun laws did not show any significant corelation with a reduction in mass shootings incidents.
 
-Overall, states in the southeastern region (i.e. Louisana, Missippi, South Carolina) along with Illinois and Delaware, had the most frequent occurences of mass shooting incidents per 1,000 people
+Overall, southeastern states Louisiana, Mississippi, South Carolina, as well as Illinois and Delaware, had the most frequent occurences of mass shooting incidents per 1,000 people.
 
 ## Shiny for Python app Link
 
