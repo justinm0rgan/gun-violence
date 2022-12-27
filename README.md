@@ -15,7 +15,7 @@ Most states had less than one mass shooting per 1,000 people, however there wher
 - Delaware
 - South Carolina
 
-States with NO mass shooting incidents during the timeframe of the data were:
+States with no mass shooting incidents were:
 - Vermont
 - North Dakota
 - Wyoming
